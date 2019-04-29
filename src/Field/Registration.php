@@ -186,19 +186,20 @@ class Registration extends AbstractEntityField {
 	/**
 	 * Delete a field from the database and delete it's associated settings too.
 	 *
+	 * @param string $post_id the id of the post belonging to the field.
 	 * @return void
 	 */
-	public function delete() {
+	public static function delete( $post_id ) {
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
-		wp_delete_post( $this->getPostID(), true );
+		wp_delete_post( $post_id, true );
 
 		$field = new \PNO\Database\Queries\Registration_Fields();
 
-		$found_field = $field->get_item_by( 'post_id', $this->getPostID() );
+		$found_field = $field->get_item_by( 'post_id', $post_id );
 
 		$field->delete_item( $found_field->getEntityID() );
 

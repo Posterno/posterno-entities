@@ -13,6 +13,9 @@ namespace PNO\Entities;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Representation of a Posterno field entity.
+ */
 abstract class AbstractEntityField extends AbstractEntity {
 
 	/**
@@ -225,11 +228,57 @@ abstract class AbstractEntityField extends AbstractEntity {
 	}
 
 	/**
+	 * Get field's title.
+	 *
+	 * @return string
+	 */
+	public function getTitle() {
+		return $this->title;
+	}
+
+	/**
+	 * Retrieve a specific setting.
+	 *
+	 * @param string $setting the setting to retrieve.
+	 * @return mixed
+	 */
+	public function getSetting( $setting ) {
+
+		$value = false;
+
+		$setting = '_' . $this->getFieldSettingsPrefix() . $setting;
+
+		if ( isset( $this->getSettings()[ $setting ] ) ) {
+			return $this->getSettings()[ $setting ];
+		}
+
+		return $value;
+
+	}
+
+	/**
+	 * Determine if a field is required.
+	 *
+	 * @return boolean
+	 */
+	public function isRequired() {
+		return $this->getSetting( 'is_required' ) ? true : false;
+	}
+
+	/**
 	 * Parse settings retrieve for the field.
 	 *
 	 * @param mixed $settings the settings retrieved,
 	 * @return void
 	 */
 	abstract public function parseSettings( $settings );
+
+	/**
+	 * Delete a field from the database.
+	 *
+	 * @param string $post_id the id of the post to delete.
+	 * @return void
+	 */
+	abstract public static function delete( $post_id );
 
 }

@@ -92,4 +92,36 @@ class Profile extends AbstractEntityField {
 
 	}
 
+	/**
+	 * Delete a profile field from the database.
+	 *
+	 * @param string $post_id the id of the field to delete.
+	 * @return void
+	 */
+	public static function delete( $post_id ) {
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		wp_delete_post( $post_id, true );
+
+		$field = new \PNO\Database\Queries\Profile_Fields();
+
+		$found_field = $field->get_item_by( 'post_id', $post_id );
+
+		$field->delete_item( $found_field->getEntityID() );
+
+		// Delete registration field automatically if found attached.
+		$reg_field_query             = new \PNO\Database\Queries\Registration_Fields();
+		$attached_registration_field = $reg_field_query->get_item_by( 'profile_field_id', $post_id );
+
+		if ( $attached_registration_field->getPostID() > 0 ) {
+			if ( $attached_registration_field->canDelete() ) {
+				$attached_registration_field::delete( $attached_registration_field->getPostID() );
+			}
+		}
+
+	}
+
 }
