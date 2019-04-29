@@ -19,33 +19,90 @@ defined( 'ABSPATH' ) || exit;
 abstract class AbstractEntity {
 
 	/**
-	 * Load the entity either via ID or via an object and then populate the properties.
+	 * Populate the object.
 	 *
-	 * @param mixed $_id_or_object item that we're going to load.
-	 * @return AbstractEntity
+	 * @param mixed $args data with which we're going to populate the object.
 	 */
-	abstract public function load( $_id_or_object );
+	public function __construct( $args = null ) {
+		$this->set_vars( $args );
+	}
 
 	/**
-	 * Add a new entity to the database.
+	 * Determine if a key has been set or not.
 	 *
-	 * @param mixed $args data to save.
-	 * @return void
+	 * @param string $key the key to verify.
+	 * @return boolean
 	 */
-	abstract public function add( $args );
+	public function __isset( $key = '' ) {
+
+		if ( 'ID' === $key ) {
+			$key = 'id';
+		}
+
+		$method = "get_{$key}";
+
+		if ( method_exists( $this, $method ) ) {
+			return true;
+
+		} elseif ( property_exists( $this, $key ) ) {
+			return true;
+		}
+
+		return false;
+	}
 
 	/**
-	 * Update an existing entity into the database.
+	 * Get a property.
 	 *
-	 * @return void
+	 * @param string $key the property to retrieve.
+	 * @return mixed
 	 */
-	abstract public function save();
+	public function __get( $key = '' ) {
+
+		if ( 'ID' === $key ) {
+			$key = 'id';
+		}
+
+		$method = "get_{$key}";
+
+		if ( method_exists( $this, $method ) ) {
+			return call_user_func( array( $this, $method ) );
+
+		} elseif ( property_exists( $this, $key ) ) {
+			return $this->{$key};
+		}
+
+		return null;
+	}
 
 	/**
-	 * Delete an entity from the database.
+	 * Conver the object properties to an array.
 	 *
+	 * @return array
+	 */
+	public function to_array() {
+		return get_object_vars( $this );
+	}
+
+	/**
+	 * Setup properties into the object.
+	 *
+	 * @param array $args properties and values to set.
 	 * @return void
 	 */
-	abstract public function delete();
+	protected function set_vars( $args = array() ) {
+
+		if ( empty( $args ) ) {
+			return;
+		}
+
+		if ( ! is_array( $args ) ) {
+			$args = (array) $args;
+		}
+
+		foreach ( $args as $key => $value ) {
+			$this->{$key} = $value;
+		}
+	}
 
 }
