@@ -193,16 +193,23 @@ class Profile extends AbstractEntityField {
 
 		$found_field = $field->get_item_by( 'post_id', $post_id );
 
-		$field->delete_item( $found_field->getEntityID() );
+		if ( $found_field instanceof \PNO\Entities\Field\Profile && $found_field->getPostID() > 0 && $found_field->canDelete() ) {
 
-		// Delete registration field automatically if found attached.
-		$reg_field_query             = new \PNO\Database\Queries\Registration_Fields();
-		$attached_registration_field = $reg_field_query->get_item_by( 'profile_field_id', $post_id );
+			$field->delete_item( $found_field->getEntityID() );
 
-		if ( isset( $attached_registration_field->post_id ) && $attached_registration_field->getPostID() > 0 ) {
-			if ( $attached_registration_field->canDelete() ) {
-				$attached_registration_field::delete( $attached_registration_field->getPostID() );
+			// Delete registration field automatically if found attached.
+			$reg_field_query             = new \PNO\Database\Queries\Registration_Fields();
+			$attached_registration_field = $reg_field_query->get_item_by( 'profile_field_id', $post_id );
+
+			if ( isset( $attached_registration_field->post_id ) && $attached_registration_field->getPostID() > 0 ) {
+				if ( $attached_registration_field->canDelete() ) {
+					$attached_registration_field::delete( $attached_registration_field->getPostID() );
+				}
 			}
+		} else {
+
+			return new WP_Error( 'cannot_delete', esc_html__( 'Default fields cannot be deleted.' ) );
+
 		}
 
 	}
