@@ -266,6 +266,16 @@ abstract class AbstractEntityField extends AbstractEntity {
 	}
 
 	/**
+	 * Setup the priority of the field.
+	 *
+	 * @param string $priority the new priority level for the field.
+	 * @return void
+	 */
+	public function setPriority( $priority ) {
+		carbon_set_post_meta( $this->getPostID(), $this->getFieldSettingsPrefix() . 'priority', absint( $priority ) );
+	}
+
+	/**
 	 * Parse settings retrieve for the field.
 	 *
 	 * @param mixed $settings the settings retrieved,
