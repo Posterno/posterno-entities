@@ -133,8 +133,6 @@ class Profile extends AbstractEntityField {
 			$field = new \PNO\Database\Queries\Profile_Fields();
 			$field->add_item( [ 'post_id' => $field_id ] );
 
-			carbon_set_post_meta( $field_id, 'profile_field_profile_field_id', $args['profile_field_id'] );
-
 			if ( isset( $args['priority'] ) && ! empty( $args['priority'] ) ) {
 				carbon_set_post_meta( $field_id, 'profile_field_priority', $args['priority'] );
 			}
@@ -201,7 +199,7 @@ class Profile extends AbstractEntityField {
 		$reg_field_query             = new \PNO\Database\Queries\Registration_Fields();
 		$attached_registration_field = $reg_field_query->get_item_by( 'profile_field_id', $post_id );
 
-		if ( $attached_registration_field->getPostID() > 0 ) {
+		if ( isset( $attached_registration_field->post_id ) && $attached_registration_field->getPostID() > 0 ) {
 			if ( $attached_registration_field->canDelete() ) {
 				$attached_registration_field::delete( $attached_registration_field->getPostID() );
 			}
