@@ -179,7 +179,7 @@ class Profile extends AbstractEntityField {
 	 * Delete a profile field from the database.
 	 *
 	 * @param string $post_id the id of the field to delete.
-	 * @return void
+	 * @return mixed
 	 */
 	public static function delete( $post_id ) {
 

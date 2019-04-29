@@ -189,7 +189,7 @@ class Registration extends AbstractEntityField {
 	 * Delete a field from the database and delete it's associated settings too.
 	 *
 	 * @param string $post_id the id of the post belonging to the field.
-	 * @return void
+	 * @return mixed
 	 */
 	public static function delete( $post_id ) {
 
@@ -203,8 +203,11 @@ class Registration extends AbstractEntityField {
 
 		$found_field = $field->get_item_by( 'post_id', $post_id );
 
-		$field->delete_item( $found_field->getEntityID() );
-
+		if ( $found_field->getPostID() > 0 && $found_field->canDelete() ) {
+			$field->delete_item( $found_field->getEntityID() );
+		} else {
+			return new WP_Error( 'cannot_delete', esc_html__( 'Default fields cannot be deleted.' ) );
+		}
 	}
 
 }
