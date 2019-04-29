@@ -43,12 +43,12 @@ class Registration extends AbstractEntityField {
 	protected $profile_field_id = false;
 
 	/**
-	 * Get things started.
+	 * Retrieve the profile field id attached to the registration field.
 	 *
-	 * @param mixed $object id or object of a field entity.
+	 * @return string|boolean
 	 */
-	public function __construct( $object = null ) {
-		parent::__construct( $object );
+	public function getProfileFieldID() {
+		return $this->profile_field_id;
 	}
 
 	/**
@@ -105,6 +105,102 @@ class Registration extends AbstractEntityField {
 				$this->required = true;
 			}
 		}
+
+		// Attach profile field to the registration field if not a default field.
+		if ( ! empty( $this->getProfileFieldID() ) ) {
+
+			$profile_field = new \PNO\Database\Queries\Profile_Fields();
+			$profile_field = $profile_field->get_item_by( 'post_id', $this->getProfileFieldID() );
+
+			if ( $profile_field instanceof Profile ) {
+				$this->type            = $profile_field->getType();
+				$this->type_nicename   = isset( $types[ $profile_field->getType() ] ) ? $types[ $profile_field->getType() ] : false;
+				$this->object_meta_key = $profile_field->getObjectMetaKey();
+
+				if ( in_array( $profile_field->getType(), pno_get_multi_options_field_types() ) ) {
+					$this->multiple = true;
+				}
+
+				/*
+				if ( is_array( $profile_field->get_options() ) && ! empty( $profile_field->get_options() ) ) {
+					$this->options = $profile_field->get_options();
+				}*/
+			}
+		}
+
+	}
+
+	/**
+	 * Create a new field and save it into the database.
+	 *
+	 * @param array $args list of arguments to create a new field.
+	 * @throws InvalidArgumentException When missing arguments.
+	 * @return string
+	 */
+	public function create( $args = [] ) {
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		if ( ! isset( $args['name'] ) || empty( $args['name'] ) ) {
+			throw new InvalidArgumentException( sprintf( __( 'Can\'t find property %s', 'posterno' ), 'name' ) );
+		}
+
+		if ( ! isset( $args['profile_field_id'] ) || empty( $args['profile_field_id'] ) ) {
+			throw new InvalidArgumentException( sprintf( __( 'Can\'t find property %s', 'posterno' ), 'profile_field_id' ) );
+		}
+
+		$field_args = [
+			'post_type'   => $this->getPostType(),
+			'post_title'  => $args['name'],
+			'post_status' => 'publish',
+		];
+
+		$field_id = wp_insert_post( $field_args );
+
+		if ( ! is_wp_error( $field_id ) ) {
+
+			$field = new \PNO\Database\Queries\Registration_Fields();
+			$field->add_item(
+				[
+					'post_id'          => $field_id,
+					'profile_field_id' => isset( $args['profile_field_id'] ) ? absint( $args['profile_field_id'] ) : false,
+				]
+			);
+
+			if ( isset( $args['profile_field_id'] ) ) {
+				carbon_set_post_meta( $field_id, $this->getFieldSettingsPrefix() . 'profile_field_id', $args['profile_field_id'] );
+			}
+
+			if ( isset( $args['priority'] ) && ! empty( $args['priority'] ) ) {
+				carbon_set_post_meta( $field_id, $this->getFieldSettingsPrefix() . 'priority', $args['priority'] );
+			}
+
+			return $field_id;
+
+		}
+
+	}
+
+	/**
+	 * Delete a field from the database and delete it's associated settings too.
+	 *
+	 * @return void
+	 */
+	public function delete() {
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		wp_delete_post( $this->getPostID(), true );
+
+		$field = new \PNO\Database\Queries\Registration_Fields();
+
+		$found_field = $field->get_item_by( 'post_id', $this->getPostID() );
+
+		$field->delete_item( $found_field->getEntityID() );
 
 	}
 
