@@ -83,6 +83,14 @@ abstract class AbstractEntityField extends AbstractEntity {
 	protected $type_nicename = null;
 
 	/**
+	 * Field title.
+	 *
+	 * @access protected
+	 * @var string
+	 */
+	protected $title = null;
+
+	/**
 	 * All settings related to the field.
 	 *
 	 * @var string
@@ -100,6 +108,9 @@ abstract class AbstractEntityField extends AbstractEntity {
 
 		$this->parseSettings( $this->getSettings() );
 
+		if ( ! empty( $this->getPostID() ) ) {
+			$this->setTitle( $this->getPostID() );
+		}
 	}
 
 	/**
@@ -201,6 +212,16 @@ abstract class AbstractEntityField extends AbstractEntity {
 	 */
 	public function removeSettingPrefix( $prefix, $id ) {
 		return str_replace( $prefix, '', $id );
+	}
+
+	/**
+	 * Set the title of the field by using a post id.
+	 *
+	 * @param string $id the id of the post.
+	 * @return void
+	 */
+	public function setTitle( $id ) {
+		$this->title = get_the_title( $id );
 	}
 
 	/**
