@@ -137,7 +137,7 @@ class Registration extends AbstractEntityField {
 	 * @throws InvalidArgumentException When missing arguments.
 	 * @return string
 	 */
-	public function create( $args = [] ) {
+	public static function create( $args = [] ) {
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
@@ -152,7 +152,7 @@ class Registration extends AbstractEntityField {
 		}
 
 		$field_args = [
-			'post_type'   => $this->getPostType(),
+			'post_type'   => 'pno_signup_fields',
 			'post_title'  => $args['name'],
 			'post_status' => 'publish',
 		];
@@ -170,16 +170,18 @@ class Registration extends AbstractEntityField {
 			);
 
 			if ( isset( $args['profile_field_id'] ) ) {
-				carbon_set_post_meta( $field_id, $this->getFieldSettingsPrefix() . 'profile_field_id', $args['profile_field_id'] );
+				carbon_set_post_meta( $field_id, 'registration_field_profile_field_id', $args['profile_field_id'] );
 			}
 
 			if ( isset( $args['priority'] ) && ! empty( $args['priority'] ) ) {
-				carbon_set_post_meta( $field_id, $this->getFieldSettingsPrefix() . 'priority', $args['priority'] );
+				carbon_set_post_meta( $field_id, 'registration_field_priority', $args['priority'] );
 			}
 
-			return $field_id;
+			return $field->get_item_by( 'post_id', $field_id );
 
 		}
+
+		return false;
 
 	}
 
