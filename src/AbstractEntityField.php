@@ -284,6 +284,14 @@ abstract class AbstractEntityField extends AbstractEntity {
 	abstract public function parseSettings( $settings );
 
 	/**
+	 * Create a field.
+	 *
+	 * @param array $args details about the new field.
+	 * @return void
+	 */
+	abstract public static function create( $args = [] );
+
+	/**
 	 * Delete a field from the database.
 	 *
 	 * @param string $post_id the id of the post to delete.

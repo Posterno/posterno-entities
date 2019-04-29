@@ -93,6 +93,91 @@ class Profile extends AbstractEntityField {
 	}
 
 	/**
+	 * Crete a new profile field.
+	 *
+	 * @param array $args details about the field.
+	 * @return mixed
+	 */
+	public static function create( $args = [] ) {
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		if ( ! isset( $args['name'] ) || empty( $args['name'] ) ) {
+			throw new \InvalidArgumentException( sprintf( __( 'Can\'t find property %s', 'posterno' ), 'name' ) );
+		}
+
+		if ( empty( $args['meta'] ) ) {
+			$meta         = sanitize_title( $args['name'] );
+			$meta         = str_replace( '-', '_', $meta );
+			$args['meta'] = $meta;
+		}
+
+		$field_args = [
+			'post_type'   => 'pno_users_fields',
+			'post_title'  => $args['name'],
+			'post_status' => 'publish',
+		];
+
+		if ( isset( $args['meta'] ) && ! empty( $args['meta'] ) ) {
+			if ( self::fieldMetaKeyExists( $args['meta'] ) ) {
+				return new \WP_Error( 'field-meta-exists', esc_html__( 'A field with the same meta key has been found. Please choose a different name.', 'posterno' ) );
+			}
+		}
+
+		$field_id = wp_insert_post( $field_args );
+
+		if ( ! is_wp_error( $field_id ) ) {
+
+			$field = new \PNO\Database\Queries\Profile_Fields();
+			$field->add_item( [ 'post_id' => $field_id ] );
+
+			carbon_set_post_meta( $field_id, 'profile_field_profile_field_id', $args['profile_field_id'] );
+
+			if ( isset( $args['priority'] ) && ! empty( $args['priority'] ) ) {
+				carbon_set_post_meta( $field_id, 'profile_field_priority', $args['priority'] );
+			}
+
+			if ( isset( $args['meta'] ) && ! empty( $args['meta'] ) ) {
+				carbon_set_post_meta( $field_id, 'profile_field_meta_key', $args['meta'] );
+			}
+
+			if ( isset( $args['type'] ) && ! empty( $args['type'] ) ) {
+				carbon_set_post_meta( $field_id, 'profile_field_type', $args['type'] );
+			}
+
+			return $field->get_item_by( 'post_id', $field_id );
+
+		}
+
+		return false;
+
+	}
+
+	/**
+	 * Determine if a field using the same meta key already exists.
+	 *
+	 * @param string $meta the meta key to verify.
+	 * @return boolean
+	 */
+	private static function fieldMetaKeyExists( $meta ) {
+
+		$exists = false;
+
+		$profile_field = new \PNO\Database\Queries\Profile_Fields();
+
+		$query = $profile_field->get_item_by( 'user_meta_key', $meta );
+
+		if ( isset( $query->post_id ) && $query->post_id > 0 ) {
+			$exists = true;
+		}
+
+		return $exists;
+
+	}
+
+	/**
 	 * Delete a profile field from the database.
 	 *
 	 * @param string $post_id the id of the field to delete.
