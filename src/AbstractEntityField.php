@@ -102,42 +102,92 @@ abstract class AbstractEntityField extends AbstractEntity {
 
 	}
 
+	/**
+	 * Get the entity id number.
+	 *
+	 * @return string
+	 */
 	public function getEntityID() {
 		return $this->id;
 	}
 
+	/**
+	 * Field id number associated to the entity.
+	 *
+	 * @return string
+	 */
 	public function getPostID() {
 		return $this->post_id;
 	}
 
+	/**
+	 * Get the meta key used to store data into the database.
+	 *
+	 * @return string
+	 */
 	public function getObjectMetaKey() {
 		return $this->object_meta_key;
 	}
 
+	/**
+	 * Prefix used by Carbon field to store settings into the database.
+	 *
+	 * @return string
+	 */
 	public function getFieldSettingsPrefix() {
 		return $this->field_setting_prefix;
 	}
 
+	/**
+	 * The postype to which the field belongs to.
+	 *
+	 * @return string
+	 */
 	public function getPostType() {
 		return $this->post_type;
 	}
 
+	/**
+	 * Priority number assigned to the field.
+	 *
+	 * @return string
+	 */
 	public function getPriority() {
 		return $this->priority;
 	}
 
+	/**
+	 * Whether the field can be deleted or not.
+	 *
+	 * @return boolean
+	 */
 	public function canDelete() {
 		return (bool) $this->can_delete;
 	}
 
+	/**
+	 * Field type.
+	 *
+	 * @return string
+	 */
 	public function getType() {
 		return $this->type;
 	}
 
+	/**
+	 * Field type human readable name.
+	 *
+	 * @return string
+	 */
 	public function getTypeNicename() {
 		return $this->type_nicename;
 	}
 
+	/**
+	 * All settings that belong to the field.
+	 *
+	 * @return string|array
+	 */
 	public function getSettings() {
 		return $this->settings;
 	}
