@@ -21,6 +21,13 @@ defined( 'ABSPATH' ) || exit;
 class Profile extends AbstractEntityField {
 
 	/**
+	 * The user id assigned to the field.
+	 *
+	 * @var string
+	 */
+	public $user_id;
+
+	/**
 	 * The prefix used by Carbon Fields to store field's settings.
 	 *
 	 * @var string
@@ -33,6 +40,31 @@ class Profile extends AbstractEntityField {
 	 * @var string
 	 */
 	protected $post_type = 'pno_users_fields';
+
+	/**
+	 * Get things started.
+	 *
+	 * @param mixed   $args arguments to instantiate the object.
+	 * @param boolean $user_id the id of the user if needed to load a value.
+	 */
+	public function __construct( $args = null, $user_id = false ) {
+
+		parent::__construct( $args );
+
+		if ( $user_id ) {
+			$this->user_id = absint( $user_id );
+			$this->loadValue();
+		}
+	}
+
+	/**
+	 * Retrieve the user id assigned to the field.
+	 *
+	 * @return string
+	 */
+	public function getUserID() {
+		return $this->user_id;
+	}
 
 	/**
 	 * Parse settings.
@@ -226,6 +258,26 @@ class Profile extends AbstractEntityField {
 
 		return $field->get_item_by( 'post_id', $post_id );
 
+	}
+
+	/**
+	 * Load the value associated with the field if a user id is given.
+	 *
+	 * @return void
+	 */
+	public function loadValue() {
+
+		$meta_lookup = $this->getObjectMetaKey();
+
+		if ( $meta_lookup === 'avatar' ) {
+			$meta_lookup = 'current_user_avatar';
+		}
+
+		if ( pno_is_default_field( $meta_lookup ) ) {
+			$this->value = get_user_meta( $this->getUserID(), $meta_lookup, true );
+		} else {
+			$this->value = carbon_get_user_meta( $this->getUserID(), $meta_lookup );
+		}
 	}
 
 }
