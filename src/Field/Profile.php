@@ -72,7 +72,7 @@ class Profile extends AbstractEntityField {
 						$this->allowed_mime_types = maybe_unserialize( $value );
 						break;
 					case 'file_is_multiple':
-						$this->multiple = $this->getType() === 'file' ? true : false;
+						$this->multiple = $this->get_type() === 'file' ? true : false;
 						break;
 					default:
 						$this->{$setting} = $value;

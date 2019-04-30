@@ -101,6 +101,79 @@ abstract class AbstractEntityField extends AbstractEntity {
 	protected $settings = null;
 
 	/**
+	 * Field form label.
+	 *
+	 * @access protected
+	 * @var string
+	 */
+	protected $label = null;
+
+	/**
+	 * Field description.
+	 *
+	 * @access protected
+	 * @var string
+	 */
+	protected $description = null;
+
+	/**
+	 * Field placeholder.
+	 *
+	 * @access protected
+	 * @var string
+	 */
+	protected $placeholder = null;
+
+	/**
+	 * Determine wether the field is readonly or not.
+	 *
+	 * @var boolean
+	 */
+	protected $readonly = false;
+
+	/**
+	 * Determine wether the field is admin only or not.
+	 *
+	 * @var boolean
+	 */
+	protected $admin_only = false;
+
+	/**
+	 * Selectable options for dropdown fields.
+	 *
+	 * @var mixed
+	 */
+	protected $options = [];
+
+	/**
+	 * Allowed mime types for upload of file fields.
+	 *
+	 * @var boolean|array
+	 */
+	protected $allowed_mime_types = false;
+
+	/**
+	 * Determine if the field can store multiple values eg: arrays.
+	 *
+	 * @var boolean
+	 */
+	protected $multiple = false;
+
+	/**
+	 * Holds the max size for files uploadable through this field.
+	 *
+	 * @var string
+	 */
+	protected $maxsize = null;
+
+	/**
+	 * Value associated to the field.
+	 *
+	 * @var mixed
+	 */
+	protected $value = false;
+
+	/**
 	 * Populate the field properties.
 	 *
 	 * @param mixed $args items with which we're going to populate the field properties.
@@ -204,6 +277,96 @@ abstract class AbstractEntityField extends AbstractEntity {
 	 */
 	public function getSettings() {
 		return $this->settings;
+	}
+
+	/**
+	 * Get the form label for this field.
+	 *
+	 * @return string
+	 */
+	public function getLabel() {
+		return $this->label;
+	}
+
+	/**
+	 * Get the description for forms assigned to the field.
+	 *
+	 * @return string
+	 */
+	public function getDescription() {
+		return $this->description;
+	}
+
+	/**
+	 * Get a placeholder for the field within forms if specified.
+	 *
+	 * @return mixed
+	 */
+	public function getPlaceholder() {
+		return $this->placeholder;
+	}
+
+	/**
+	 * Flag to detect if the field is readonly or not.
+	 *
+	 * @return boolean
+	 */
+	public function isReadOnly() {
+		return (bool) $this->readonly;
+	}
+
+	/**
+	 * Flag to detect whether the field is admin only.
+	 *
+	 * @return boolean
+	 */
+	public function isAdminOnly() {
+		return (bool) $this->admin_only;
+	}
+
+	/**
+	 * Get the value associated with the field.
+	 *
+	 * @return mixed
+	 */
+	public function getValue() {
+		return $this->value;
+	}
+
+	/**
+	 * Retrieve selectable options for this field if needed.
+	 *
+	 * @return mixed
+	 */
+	public function getOptions() {
+		return apply_filters( "pno_field_{$this->object_meta_key}_selectable_options", $this->options );
+	}
+
+	/**
+	 * Retrieve mime types defined for the field.
+	 *
+	 * @return mixed
+	 */
+	public function getAllowedMimeTypes() {
+		return $this->allowed_mime_types;
+	}
+
+	/**
+	 * Verify if the field can store multiple values eg: arrays.
+	 *
+	 * @return boolean
+	 */
+	public function isMultiple() {
+		return (bool) $this->multiple;
+	}
+
+	/**
+	 * Retrieve the specified max size allowed for files within this field.
+	 *
+	 * @return null|string
+	 */
+	public function getMaxSize() {
+		return $this->maxsize;
 	}
 
 	/**
