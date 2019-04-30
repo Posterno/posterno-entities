@@ -121,10 +121,9 @@ class Registration extends AbstractEntityField {
 					$this->multiple = true;
 				}
 
-				/*
-				if ( is_array( $profile_field->get_options() ) && ! empty( $profile_field->get_options() ) ) {
-					$this->options = $profile_field->get_options();
-				}*/
+				if ( is_array( $profile_field->getOptions() ) && ! empty( $profile_field->getOptions() ) ) {
+					$this->options = $profile_field->getOptions();
+				}
 			}
 		}
 
