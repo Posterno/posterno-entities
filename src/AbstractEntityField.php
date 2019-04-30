@@ -462,4 +462,12 @@ abstract class AbstractEntityField extends AbstractEntity {
 	 */
 	abstract public static function delete( $post_id );
 
+	/**
+	 * Get a field from a post id.
+	 *
+	 * @param string $post_id the post id.
+	 * @return void
+	 */
+	abstract public static function getFromID( $post_id );
+
 }

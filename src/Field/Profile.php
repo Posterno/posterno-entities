@@ -214,4 +214,18 @@ class Profile extends AbstractEntityField {
 
 	}
 
+	/**
+	 * Get a profile field by the post id.
+	 *
+	 * @param string $post_id post id of the field.
+	 * @return Profile
+	 */
+	public static function getFromID( $post_id ) {
+
+		$field = new \PNO\Database\Queries\Profile_Fields();
+
+		return $field->get_item_by( 'post_id', $post_id );
+
+	}
+
 }

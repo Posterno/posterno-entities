@@ -210,4 +210,18 @@ class Registration extends AbstractEntityField {
 		}
 	}
 
+	/**
+	 * Get a registration field from a post id.
+	 *
+	 * @param string $post_id the id of the registration field.
+	 * @return Registration
+	 */
+	public static function getFromID( $post_id ) {
+
+		$field = new \PNO\Database\Queries\Registration_Fields();
+
+		return $field->get_item_by( 'post_id', $post_id );
+
+	}
+
 }

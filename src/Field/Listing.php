@@ -238,4 +238,18 @@ class Listing extends AbstractEntityField {
 		}
 	}
 
+	/**
+	 * Get a listing field by the post id.
+	 *
+	 * @param string $post_id the id of the post.
+	 * @return Listing
+	 */
+	public static function getFromID( $post_id ) {
+
+		$field = new \PNO\Database\Queries\Listing_Fields();
+
+		return $field->get_item_by( 'post_id', $post_id );
+
+	}
+
 }
