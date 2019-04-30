@@ -42,31 +42,6 @@ class Profile extends AbstractEntityField {
 	protected $post_type = 'pno_users_fields';
 
 	/**
-	 * Get things started.
-	 *
-	 * @param mixed   $args arguments to instantiate the object.
-	 * @param boolean $user_id the id of the user if needed to load a value.
-	 */
-	public function __construct( $args = null, $user_id = false ) {
-
-		parent::__construct( $args );
-
-		if ( $user_id ) {
-			$this->user_id = absint( $user_id );
-			$this->loadValue();
-		}
-	}
-
-	/**
-	 * Retrieve the user id assigned to the field.
-	 *
-	 * @return string
-	 */
-	public function getUserID() {
-		return $this->user_id;
-	}
-
-	/**
 	 * Parse settings.
 	 *
 	 * @param mixed $settings settings to parse.
@@ -265,7 +240,7 @@ class Profile extends AbstractEntityField {
 	 *
 	 * @return void
 	 */
-	public function loadValue() {
+	public function loadValue( $user_id ) {
 
 		$meta_lookup = $this->getObjectMetaKey();
 
@@ -274,9 +249,9 @@ class Profile extends AbstractEntityField {
 		}
 
 		if ( pno_is_default_field( $meta_lookup ) ) {
-			$this->value = get_user_meta( $this->getUserID(), $meta_lookup, true );
+			$this->value = get_user_meta( $user_id, $meta_lookup, true );
 		} else {
-			$this->value = carbon_get_user_meta( $this->getUserID(), $meta_lookup );
+			$this->value = carbon_get_user_meta( $user_id, $meta_lookup );
 		}
 	}
 
