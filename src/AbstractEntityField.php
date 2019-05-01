@@ -187,6 +187,10 @@ abstract class AbstractEntityField extends AbstractEntity {
 		if ( ! empty( $this->getPostID() ) ) {
 			$this->setTitle( $this->getPostID() );
 		}
+
+		if ( ! empty( $this->getLabel() ) ) {
+			$this->title = $this->getLabel();
+		}
 	}
 
 	/**
