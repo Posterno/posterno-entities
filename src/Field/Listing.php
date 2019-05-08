@@ -48,7 +48,7 @@ class Listing extends AbstractEntityField {
 	 *
 	 * @return string
 	 */
-	public function get_taxonomy() {
+	public function getTaxonomy() {
 		return $this->taxonomy;
 	}
 
