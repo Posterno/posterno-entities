@@ -438,7 +438,7 @@ abstract class AbstractEntityField extends AbstractEntity {
 	 * @return string|boolean
 	 */
 	public function getCssClasses() {
-		return $this->getSetting( 'field_classes' ) ? $this->getSetting( 'field_classes' ) : false;
+		return $this->getSetting( 'classes' ) ? $this->getSetting( 'classes' ) : false;
 	}
 
 	/**
