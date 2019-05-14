@@ -433,6 +433,15 @@ abstract class AbstractEntityField extends AbstractEntity {
 	}
 
 	/**
+	 * Retrieve custom css classes assigned to the field's wrapper.
+	 *
+	 * @return string|boolean
+	 */
+	public function getCssClasses() {
+		return $this->getSetting( 'field_classes' ) ? $this->getSetting( 'field_classes' ) : false;
+	}
+
+	/**
 	 * Setup the priority of the field.
 	 *
 	 * @param string $priority the new priority level for the field.
