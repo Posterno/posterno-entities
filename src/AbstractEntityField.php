@@ -465,7 +465,7 @@ abstract class AbstractEntityField extends AbstractEntity {
 	 * @param array $args details about the new field.
 	 * @return void
 	 */
-	abstract public static function create( $args = [] );
+	public static function create( $args = [] ) {}
 
 	/**
 	 * Delete a field from the database.
@@ -473,7 +473,7 @@ abstract class AbstractEntityField extends AbstractEntity {
 	 * @param string $post_id the id of the post to delete.
 	 * @return void
 	 */
-	abstract public static function delete( $post_id );
+	public static function delete( $post_id ) {}
 
 	/**
 	 * Get a field from a post id.
@@ -481,6 +481,6 @@ abstract class AbstractEntityField extends AbstractEntity {
 	 * @param string $post_id the post id.
 	 * @return void
 	 */
-	abstract public static function getFromID( $post_id );
+	public static function getFromID( $post_id ) {}
 
 }
