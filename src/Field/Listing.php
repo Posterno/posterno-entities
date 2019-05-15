@@ -234,7 +234,7 @@ class Listing extends AbstractEntityField {
 		if ( $found_field instanceof \PNO\Entities\Field\Listing && $found_field->getPostID() > 0 && $found_field->canDelete() ) {
 			$field->delete_item( $found_field->getEntityID() );
 		} else {
-			return new WP_Error( 'cannot_delete', esc_html__( 'Default fields cannot be deleted.' ) );
+			return new WP_Error( 'cannot_delete', esc_html__( 'Default fields cannot be deleted.', 'posterno' ) );
 		}
 	}
 

@@ -215,7 +215,7 @@ class Profile extends AbstractEntityField {
 			}
 		} else {
 
-			return new WP_Error( 'cannot_delete', esc_html__( 'Default fields cannot be deleted.' ) );
+			return new WP_Error( 'cannot_delete', esc_html__( 'Default fields cannot be deleted.', 'posterno' ) );
 
 		}
 
