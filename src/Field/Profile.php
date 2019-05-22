@@ -185,12 +185,13 @@ class Profile extends AbstractEntityField {
 	/**
 	 * Delete a profile field from the database.
 	 *
-	 * @param string $post_id the id of the field to delete.
+	 * @param string  $post_id the id of the field to delete.
+	 * @param boolean $force whether to force cancellation or not.
 	 * @return mixed
 	 */
-	public static function delete( $post_id ) {
+	public static function delete( $post_id, $force = false ) {
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'manage_options' ) && ! $force ) {
 			return;
 		}
 
@@ -200,7 +201,7 @@ class Profile extends AbstractEntityField {
 
 		$found_field = $field->get_item_by( 'post_id', $post_id );
 
-		if ( $found_field instanceof \PNO\Entities\Field\Profile && $found_field->getPostID() > 0 && $found_field->canDelete() ) {
+		if ( $found_field instanceof \PNO\Entities\Field\Profile && $found_field->getPostID() > 0 && ( $found_field->canDelete() || $force === true ) ) {
 
 			$field->delete_item( $found_field->getEntityID() );
 
