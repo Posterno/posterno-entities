@@ -105,4 +105,13 @@ abstract class AbstractEntity {
 		}
 	}
 
+	/**
+	 * Get entity id.
+	 *
+	 * @return string
+	 */
+	public function get_id() {
+		return $this->id;
+	}
+
 }
