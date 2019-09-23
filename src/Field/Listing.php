@@ -44,6 +44,13 @@ class Listing extends AbstractEntityField {
 	protected $disable_branch_nodes = false;
 
 	/**
+	 * Determine if the field is hidden from the admin panel.
+	 *
+	 * @var boolean
+	 */
+	protected $admin_hidden = false;
+
+	/**
 	 * Retrieve the attached taxonomy id to the field.
 	 *
 	 * @return string
@@ -98,6 +105,9 @@ class Listing extends AbstractEntityField {
 						break;
 					case 'chain_is_multiple':
 						$this->multiple = $this->getType() === 'term-chain-dropdown' ? true : false;
+						break;
+					case 'listing_field_admin_hidden':
+						$this->admin_hidden = $value;
 						break;
 					default:
 						$this->{$setting} = $value;
@@ -251,6 +261,15 @@ class Listing extends AbstractEntityField {
 
 		return $field->get_item_by( 'post_id', $post_id );
 
+	}
+
+	/**
+	 * Determine if the field has been hidden from the admin panel.
+	 *
+	 * @return boolean
+	 */
+	public function isAdminHidden() {
+		return (bool) $this->admin_hidden;
 	}
 
 }
