@@ -51,6 +51,13 @@ class Listing extends AbstractEntityField {
 	protected $admin_hidden = false;
 
 	/**
+	 * Determine the visibility of the field on the frontend.
+	 *
+	 * @var string
+	 */
+	protected $visibility = 'visible';
+
+	/**
 	 * Retrieve the attached taxonomy id to the field.
 	 *
 	 * @return string
@@ -108,6 +115,9 @@ class Listing extends AbstractEntityField {
 						break;
 					case 'listing_field_admin_hidden':
 						$this->admin_hidden = $value;
+						break;
+					case 'listing_field_visibility':
+						$this->visibility = $value;
 						break;
 					default:
 						$this->{$setting} = $value;
@@ -270,6 +280,15 @@ class Listing extends AbstractEntityField {
 	 */
 	public function isAdminHidden() {
 		return (bool) $this->admin_hidden;
+	}
+
+	/**
+	 * Determine the visibility of the field.
+	 *
+	 * @return string
+	 */
+	public function getVisibility() {
+		return $this->visibility;
 	}
 
 }
