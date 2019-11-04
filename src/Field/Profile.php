@@ -42,6 +42,13 @@ class Profile extends AbstractEntityField {
 	protected $post_type = 'pno_users_fields';
 
 	/**
+	 * Determine the visibility of the field on the frontend.
+	 *
+	 * @var string
+	 */
+	protected $visibility = 'visible';
+
+	/**
 	 * Parse settings.
 	 *
 	 * @param mixed $settings settings to parse.
@@ -81,6 +88,9 @@ class Profile extends AbstractEntityField {
 					case 'file_is_multiple':
 						$this->multiple = $this->getType() === 'file' ? true : false;
 						break;
+					case 'visibility':
+						$this->visibility = $value;
+						break;
 					default:
 						$this->{$setting} = $value;
 						break;
@@ -91,7 +101,7 @@ class Profile extends AbstractEntityField {
 		$types               = pno_get_registered_field_types();
 		$this->type_nicename = isset( $types[ $this->getType() ] ) ? $types[ $this->getType() ] : false;
 
-		if ( in_array( $this->getType(), pno_get_multi_options_field_types() ) ) {
+		if ( in_array( $this->getType(), pno_get_multi_options_field_types(), true ) ) {
 			$this->multiple = true;
 		}
 
@@ -254,6 +264,15 @@ class Profile extends AbstractEntityField {
 		} else {
 			$this->value = carbon_get_user_meta( $user_id, $meta_lookup );
 		}
+	}
+
+	/**
+	 * Determine the visibility of the field.
+	 *
+	 * @return string
+	 */
+	public function getVisibility() {
+		return $this->visibility;
 	}
 
 }
